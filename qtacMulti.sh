@@ -10,15 +10,35 @@
 
 
 
-module load python/anaconda3.6
+module load python/anaconda3.6 fastqc
+
+if [ $# -eq 0 ]
+  then
+    echo "No arguments supplied, please specify either hg19 or hg38"
+	exit 1
+fi
+genome=$1
+
+
+if [ $genome = hg19 ];then
+  then
+	. ./hg19.config
+elif [ $genome = hg38 ];
+  then
+	. ./hg38.config
+else
+   echo "Unknown argument given, please specify either hg19 or hg38"
+   exit 1
+fi
+#######################################################################
 
 
 for i in `ls *_1.fastq.gz`;
 do
 	sampleID="${i%*_1.fastq.gz}"
-	echo "${sampleID}"
+	sbatch qtacSingle.sh $sampleID $genome
+	echo "Submitted job for: ${sampleID}"
 
-	sbatch qtacSingle.sh ${sampleID}
 
 done
 echo $?
