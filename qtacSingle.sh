@@ -20,7 +20,27 @@ module load pigz
 PATH=$HOME/.local/bin:$PATH
 
 
-sampleID=$1
+if [ $# -eq 2 ];
+  then
+	genome=$2
+	sampleID=$1
+  else
+    echo "No arguments supplied, please specify either hg19 or hg38"
+	exit 1
+fi
+
+
+if [ $genome = hg19 ];then
+  then
+	. ./hg19.config
+elif [ $genome = hg38 ];
+  then
+	. ./hg38.config
+else
+   echo "Unknown argument given, please specify either hg19 or hg38"
+   exit 1
+fi
+
 echo "${sampleID}"
 if [ -f "${sampleID}_2.fastq.gz" ]; then
 	echo "Running paired-end trimming and alignment";
